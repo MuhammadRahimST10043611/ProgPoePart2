@@ -19,13 +19,14 @@ namespace ProgPoePart2
             while (!exit)
             {
                 Console.Clear();
-                Console.WriteLine("Recipe App Menu");
-                Console.WriteLine("1. Add Recipe");
-                Console.WriteLine("2. View Recipes");
-                Console.WriteLine("3. Scale Recipe");
-                Console.WriteLine("4. Remove Recipe");
-                Console.WriteLine("5. Exit");
-                Console.Write("Enter your choice: ");
+                Console.WriteLine("Culinary Compass App Menu");
+                Console.WriteLine("1. Add Recipe.");
+                Console.WriteLine("2. View Recipes.");
+                Console.WriteLine("3. Scale Recipe.");
+                Console.WriteLine("4. Remove Recipe.");
+                Console.WriteLine("5. Edit Recipe.");
+                Console.WriteLine("6. Exit.");
+                Console.Write("Enter your choice (1-6): ");
                 string choice = Console.ReadLine();
 
                 switch (choice)
@@ -43,10 +44,13 @@ namespace ProgPoePart2
                         RemoveRecipe();
                         break;
                     case "5":
+                        EditRecipeMenu();
+                        break;
+                    case "6":
                         exit = true;
                         break;
                     default:
-                        Console.WriteLine("Invalid choice. Please enter a number between 1 and 5.");
+                        Console.WriteLine("Invalid choice. Please enter a number between 1 and 6.");
                         Pause();
                         break;
                 }
@@ -74,12 +78,15 @@ namespace ProgPoePart2
             }
 
             Console.WriteLine("\nRecipe List:");
-            for (int i = 0; i < recipes.Count; i++)
+
+            // Sort recipes by name in alphabetical order
+            var sortedRecipes = recipes.OrderBy(r => r.Name).ToList();
+            for (int i = 0; i < sortedRecipes.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {recipes[i].Name}");
+                Console.WriteLine($"{i + 1}. {sortedRecipes[i].Name}");
             }
 
-            Recipe selectedRecipe = SelectRecipe();
+            Recipe selectedRecipe = SelectRecipe(sortedRecipes);
             if (selectedRecipe != null)
             {
                 DisplayRecipeDetails(selectedRecipe);
@@ -96,12 +103,15 @@ namespace ProgPoePart2
             }
 
             Console.WriteLine("\nAvailable Recipes:");
-            for (int i = 0; i < recipes.Count; i++)
+
+            // Sort recipes by name in alphabetical order
+            var sortedRecipes = recipes.OrderBy(r => r.Name).ToList();
+            for (int i = 0; i < sortedRecipes.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {recipes[i].Name}");
+                Console.WriteLine($"{i + 1}. {sortedRecipes[i].Name}");
             }
 
-            Recipe recipe = SelectRecipe();
+            Recipe recipe = SelectRecipe(sortedRecipes);
             if (recipe != null)
             {
                 bool scaleMore;
@@ -150,12 +160,15 @@ namespace ProgPoePart2
             }
 
             Console.WriteLine("\nAvailable Recipes:");
-            for (int i = 0; i < recipes.Count; i++)
+
+            // Sort recipes by name in alphabetical order
+            var sortedRecipes = recipes.OrderBy(r => r.Name).ToList();
+            for (int i = 0; i < sortedRecipes.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {recipes[i].Name}");
+                Console.WriteLine($"{i + 1}. {sortedRecipes[i].Name}");
             }
 
-            Recipe recipe = SelectRecipe();
+            Recipe recipe = SelectRecipe(sortedRecipes);
             if (recipe != null)
             {
                 recipes.Remove(recipe);
@@ -167,12 +180,43 @@ namespace ProgPoePart2
             }
             Pause();
         }
-        private Recipe SelectRecipe()
+
+        private void EditRecipeMenu()
+        {
+            if (recipes.Count == 0)
+            {
+                Console.WriteLine("\nNo recipes available.");
+                Pause();
+                return;
+            }
+
+            Console.WriteLine("\nAvailable Recipes:");
+
+            // Sort recipes by name in alphabetical order
+            var sortedRecipes = recipes.OrderBy(r => r.Name).ToList();
+            for (int i = 0; i < sortedRecipes.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {sortedRecipes[i].Name}");
+            }
+
+            Recipe recipe = SelectRecipe(sortedRecipes);
+            if (recipe != null)
+            {
+                recipe.EditRecipe();
+            }
+            else
+            {
+                Console.WriteLine("\nRecipe not found.");
+            }
+            Pause();
+        }
+
+        private Recipe SelectRecipe(List<Recipe> sortedRecipes)
         {
             Console.Write("\nEnter the number of the recipe you want to select: ");
-            if (int.TryParse(Console.ReadLine(), out int recipeIndex) && recipeIndex > 0 && recipeIndex <= recipes.Count)
+            if (int.TryParse(Console.ReadLine(), out int recipeIndex) && recipeIndex > 0 && recipeIndex <= sortedRecipes.Count)
             {
-                return recipes[recipeIndex - 1];
+                return sortedRecipes[recipeIndex - 1];
             }
             else
             {

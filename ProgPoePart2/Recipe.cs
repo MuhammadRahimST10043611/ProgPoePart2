@@ -36,11 +36,11 @@ class Recipe
             Console.WriteLine($"\nIngredient {i + 1}:");
             Ingredient ingredient = new Ingredient
             {
-                Name = ReadString("Enter ingredient name: "),
-                Quantity = ReadDouble("Enter quantity: "),
-                Unit = ReadString("Enter unit of measurement: "),
-                Calories = ReadDouble("Enter number of calories: "),
-                FoodGroup = ReadString("Enter food group: ")
+                Name = ReadString("Enter ingredient name (e.g., chicken breast, tomatoes, flour): "),
+                Quantity = ReadDouble("Enter quantity (e.g., 1, 0.5, 2.5): "),
+                Unit = ReadString("Enter unit of measurement (e.g., cups, grams, tablespoons):  "),
+                Calories = ReadDouble("Enter number of calories for the ingredient (calories per serving): "),
+                FoodGroup = ReadString("Enter food group for the ingredient (e.g., protein, vegetable, grain):  ")
             };
             Ingredients.Add(ingredient);
             originalQuantities.Add($"{ingredient.Quantity} {ingredient.Unit}"); // Store the original quantity
@@ -69,7 +69,23 @@ class Recipe
         {
             Console.WriteLine(step);
         }
+
+        // Explanation specific to certain ranges of calories
+        double totalCalories = CalculateTotalCalories();
+        if (totalCalories <= 100)
+        {
+            Console.WriteLine("\nThis recipe is low in calories, making it a healthy choice.");
+        }
+        else if (totalCalories <= 300)
+        {
+            Console.WriteLine("\nThis recipe is moderate in calories, suitable for balanced meals.");
+        }
+        else
+        {
+            Console.WriteLine("\nThis recipe is high in calories. It's best enjoyed in moderation.");
+        }
     }
+
 
     // Method to calculate total calories of the recipe
     public double CalculateTotalCalories()
@@ -143,6 +159,43 @@ class Recipe
         Steps.Clear();
         originalQuantities.Clear();
         originalCalories.Clear(); // Clear the list of original calorie values
+    }
+
+    // Method to edit recipe details
+    public void EditRecipe()
+    {
+        Console.WriteLine("\nEditing Recipe Details:");
+
+        Console.Write("Enter new recipe name: ");
+        Name = Console.ReadLine();
+
+        int numIngredients = ReadInt("Enter the number of ingredients: ");
+        Ingredients.Clear(); // Clear existing ingredients before adding new ones
+        for (int i = 0; i < numIngredients; i++)
+        {
+            Console.WriteLine($"\nIngredient {i + 1}:");
+            Ingredient ingredient = new Ingredient
+            {
+                Name = ReadString("Enter ingredient name (e.g., chicken breast, tomatoes, flour): "),
+                Quantity = ReadDouble("Enter quantity (e.g., 1, 0.5, 2.5): "),
+                Unit = ReadString("Enter unit of measurement (e.g., cups, grams, tablespoons):  "),
+                Calories = ReadDouble("Enter number of calories for the ingredient (calories per serving): "),
+                FoodGroup = ReadString("Enter food group for the ingredient (e.g., protein, vegetable, grain):  ")
+            };
+            Ingredients.Add(ingredient);
+            originalQuantities.Add($"{ingredient.Quantity} {ingredient.Unit}"); // Store the original quantity
+            originalCalories.Add(ingredient.Calories); // Store the original calorie value
+        }
+
+        int numSteps = ReadInt("\nEnter the number of steps: ");
+        Steps.Clear(); // Clear existing steps before adding new ones
+        for (int i = 0; i < numSteps; i++)
+        {
+            Console.Write($"Enter step {i + 1}: ");
+            Steps.Add(Console.ReadLine());
+        }
+
+        Console.WriteLine("\nRecipe updated successfully!");
     }
 
     // Helper method to read an integer value from the console
