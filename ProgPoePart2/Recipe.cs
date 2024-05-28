@@ -66,11 +66,16 @@ class Recipe
         {
             Console.WriteLine($"{i + 1}. {commonFoodGroups[i]}");
         }
+        Console.WriteLine($"{commonFoodGroups.Length + 1}. Enter your own food group");
 
         int choice = ReadInt("Enter the number corresponding to the food group: ");
         if (choice >= 1 && choice <= commonFoodGroups.Length)
         {
             return commonFoodGroups[choice - 1];
+        }
+        else if (choice == commonFoodGroups.Length + 1)
+        {
+            return ReadString("Enter your own food group: ");
         }
         else
         {
