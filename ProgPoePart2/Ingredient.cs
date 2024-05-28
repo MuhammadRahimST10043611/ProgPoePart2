@@ -2,6 +2,7 @@
 {
     class Ingredient
     {
+        // Properties to store ingredient details
         public string Name { get; set; }
         public double Quantity { get; set; }
         public string Unit { get; set; }

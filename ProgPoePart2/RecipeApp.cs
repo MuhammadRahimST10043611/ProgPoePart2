@@ -6,7 +6,6 @@ namespace ProgPoePart2
 {
     class RecipeApp
     {
-
         private List<Recipe> recipes;
 
         public RecipeApp()
@@ -20,6 +19,7 @@ namespace ProgPoePart2
             do
             {
                 Recipe recipe = new Recipe();
+                recipe.CalorieWarning += DisplayCalorieWarning; // Subscribe to the calorie warning event
                 recipe.EnterRecipeDetails();
                 recipes.Add(recipe);
 
@@ -32,6 +32,7 @@ namespace ProgPoePart2
             DisplayRecipeDetails();
         }
 
+        // Method to display the list of recipes
         public void DisplayRecipeList()
         {
             Console.WriteLine("\nRecipe List:");
@@ -41,6 +42,7 @@ namespace ProgPoePart2
             }
         }
 
+        // Method to display details of a selected recipe
         public void DisplayRecipeDetails()
         {
             Recipe recipe;
@@ -64,10 +66,7 @@ namespace ProgPoePart2
             double totalCalories = recipe.CalculateTotalCalories();
             Console.WriteLine($"Total Calories: {totalCalories}");
 
-            if (totalCalories > 300)
-            {
-                Console.WriteLine("Warning: Total calories exceed 300!");
-            }
+            recipe.NotifyIfCaloriesExceedLimit(); // Check if calories exceed the limit
 
             bool scaleMore;
             do
@@ -80,10 +79,7 @@ namespace ProgPoePart2
                     totalCalories = recipe.CalculateTotalCalories();
                     Console.WriteLine($"Total Calories: {totalCalories}");
 
-                    if (totalCalories > 300)
-                    {
-                        Console.WriteLine("Warning: Total calories exceed 300!");
-                    }
+                    recipe.NotifyIfCaloriesExceedLimit(); // Check if calories exceed the limit after scaling
                 }
                 else
                 {
@@ -104,5 +100,11 @@ namespace ProgPoePart2
             // Clear the recipe if you want to remove it after displaying
             recipe.ClearRecipe();
         }
+
+        // Method to display the calorie warning message
+        private void DisplayCalorieWarning(string message)
+        {
+            Console.WriteLine(message);
+        }
     }
-    }
+}

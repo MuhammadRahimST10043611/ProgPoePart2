@@ -1,15 +1,20 @@
 ﻿using ProgPoePart2;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
-    class Recipe
+class Recipe
 {
+    // Properties to store recipe details
     public string Name { get; set; }
     public List<Ingredient> Ingredients { get; set; }
     public List<string> Steps { get; set; }
     private List<double> originalCalories;
     private List<string> originalQuantities;
+
+    // Delegate to notify when calories exceed 300
+    public delegate void CalorieWarningHandler(string message);
+    public event CalorieWarningHandler CalorieWarning;
 
     public Recipe()
     {
@@ -19,6 +24,7 @@ using System;
         originalQuantities = new List<string>();
     }
 
+    // Method to enter recipe details
     public void EnterRecipeDetails()
     {
         Console.Write("\nEnter recipe name: ");
@@ -28,12 +34,14 @@ using System;
         for (int i = 0; i < numIngredients; i++)
         {
             Console.WriteLine($"\nIngredient {i + 1}:");
-            Ingredient ingredient = new Ingredient();
-            ingredient.Name = ReadString("Enter ingredient name: ");
-            ingredient.Quantity = ReadDouble("Enter quantity: ");
-            ingredient.Unit = ReadString("Enter unit of measurement: ");
-            ingredient.Calories = ReadDouble("Enter number of calories: ");
-            ingredient.FoodGroup = ReadString("Enter food group: ");
+            Ingredient ingredient = new Ingredient
+            {
+                Name = ReadString("Enter ingredient name: "),
+                Quantity = ReadDouble("Enter quantity: "),
+                Unit = ReadString("Enter unit of measurement: "),
+                Calories = ReadDouble("Enter number of calories: "),
+                FoodGroup = ReadString("Enter food group: ")
+            };
             Ingredients.Add(ingredient);
             originalQuantities.Add($"{ingredient.Quantity} {ingredient.Unit}"); // Store the original quantity
             originalCalories.Add(ingredient.Calories); // Store the original calorie value
@@ -47,6 +55,7 @@ using System;
         }
     }
 
+    // Method to display recipe details
     public void DisplayRecipe()
     {
         Console.WriteLine($"\nRecipe: {Name}");
@@ -62,16 +71,14 @@ using System;
         }
     }
 
+    // Method to calculate total calories of the recipe
     public double CalculateTotalCalories()
     {
-        double totalCalories = 0;
-        foreach (Ingredient ingredient in Ingredients)
-        {
-            totalCalories += ingredient.Calories;
-        }
+        double totalCalories = Ingredients.Sum(ingredient => ingredient.Calories);
         return totalCalories;
     }
 
+    // Method to scale the recipe
     public bool ScaleRecipe()
     {
         Console.Write("\nWould you like to scale the recipe? (yes/no) ");
@@ -102,13 +109,13 @@ using System;
         }
     }
 
+    // Method to reset ingredient quantities to their original values
     public void ResetQuantities()
     {
         for (int i = 0; i < Ingredients.Count; i++)
         {
             string[] parts = originalQuantities[i].Split(' ');
-            double quantity;
-            if (double.TryParse(parts[0], out quantity))
+            if (double.TryParse(parts[0], out double quantity))
             {
                 Ingredients[i].Quantity = quantity;
             }
@@ -119,6 +126,7 @@ using System;
         }
     }
 
+    // Method to reset ingredient calories to their original values
     public void ResetCalories()
     {
         for (int i = 0; i < Ingredients.Count; i++)
@@ -127,6 +135,7 @@ using System;
         }
     }
 
+    // Method to clear the recipe
     public void ClearRecipe()
     {
         Ingredients.Clear();
@@ -135,6 +144,7 @@ using System;
         originalCalories.Clear(); // Clear the list of original calorie values
     }
 
+    // Helper method to read an integer value from the console
     private int ReadInt(string prompt)
     {
         int value;
@@ -146,6 +156,7 @@ using System;
         return value;
     }
 
+    // Helper method to read a double value from the console, with optional validation
     private double ReadDouble(string prompt, double[] validValues = null)
     {
         double value;
@@ -157,9 +168,20 @@ using System;
         return value;
     }
 
+    // Helper method to read a string value from the console
     private string ReadString(string prompt)
     {
         Console.Write(prompt);
         return Console.ReadLine();
+    }
+
+    // Method to notify if the total calories exceed 300
+    public void NotifyIfCaloriesExceedLimit()
+    {
+        double totalCalories = CalculateTotalCalories();
+        if (totalCalories > 300)
+        {
+            CalorieWarning?.Invoke($"Warning: Total calories of {Name} exceed 300!");
+        }
     }
 }
