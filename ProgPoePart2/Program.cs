@@ -25,12 +25,11 @@ namespace ProgPoePart2
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green; // Set text color to green
             Console.WriteLine(@" 
-  ____                   _               _____      _   _     
- / ___| ___   ___   __ _| | ___ _ __    |_   _|   _| |_| |__  
-| |  _ / _ \ / _ \ / _` | |/ _ \ '__|     | || | | | __| '_ \ 
-| |_| | (_) | (_) | (_| | |  __/ |       | || |_| | |_| | | |
- \____|\___/ \___/ \__, |_|\___|_|       |_| \__,_|\__|_| |_|
-                    |___/                                     
+                W   W  EEEE  L     CCCC   OOO  M   M  EEEE
+                W   W  E     L     C     O   O MM MM  E    
+                W W W  EEEE  L     C     O   O M M M  EEEE
+                WW WW  E     L     C     O   O M   M  E    
+                W   W  EEEE  LLLLL  CCCC  OOO  M   M  EEEE                                   
             ");
             Console.WriteLine("Welcome to the Culinary Compass App!\n");
             Console.WriteLine("Press Enter to continue...");
@@ -41,12 +40,12 @@ namespace ProgPoePart2
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green; // Set text color to green
             Console.WriteLine(@" 
-   ____                              _         
-  / ___| __ _ _ __ ___   ___    __ _| | _____  
- | |  _ / _` | '_ ` _ \ / _ \  / _` | |/ / _ \ 
- | |_| | (_| | | | | | |  __/ | (_| |   <  __/ 
-  \____|\__,_|_| |_| |_|\___|  \__,_|_|\_\___|
-                                               
+                BBBB   YY   YY  EEEE
+                B   B   YY YY   E   
+                BBBB     Y     EEEE
+                B   B    Y     E   
+                BBBB     Y     EEEE
+
             ");
             Console.WriteLine("Thank you for using the Culinary Compass App!");
         }
