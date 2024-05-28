@@ -1,15 +1,23 @@
 ﻿using ProgPoePart2;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
-    class Recipe
+class Recipe
 {
+    // Properties to store recipe details
     public string Name { get; set; }
     public List<Ingredient> Ingredients { get; set; }
     public List<string> Steps { get; set; }
     private List<double> originalCalories;
     private List<string> originalQuantities;
+
+    // Delegate to notify when calories exceed 300
+    public delegate void CalorieWarningHandler(string message);
+    public event CalorieWarningHandler CalorieWarning;
+
+    // Common food groups
+    private string[] commonFoodGroups = { "Protein", "Vegetable", "Grain", "Fruit", "Dairy", "Fat/Oil" };
 
     public Recipe()
     {
@@ -19,6 +27,7 @@ using System;
         originalQuantities = new List<string>();
     }
 
+    // Method to enter recipe details
     public void EnterRecipeDetails()
     {
         Console.Write("\nEnter recipe name: ");
@@ -28,12 +37,14 @@ using System;
         for (int i = 0; i < numIngredients; i++)
         {
             Console.WriteLine($"\nIngredient {i + 1}:");
-            Ingredient ingredient = new Ingredient();
-            ingredient.Name = ReadString("Enter ingredient name: ");
-            ingredient.Quantity = ReadDouble("Enter quantity: ");
-            ingredient.Unit = ReadString("Enter unit of measurement: ");
-            ingredient.Calories = ReadDouble("Enter number of calories: ");
-            ingredient.FoodGroup = ReadString("Enter food group: ");
+            Ingredient ingredient = new Ingredient
+            {
+                Name = ReadString("Enter ingredient name (e.g., chicken breast, tomatoes, flour): "),
+                Quantity = ReadDouble("Enter quantity (e.g., 1, 0.5, 2.5): "),
+                Unit = ReadString("Enter unit of measurement (e.g., cups, grams, tablespoons):  "),
+                Calories = ReadDouble("Enter number of calories for the ingredient (calories per serving): "),
+                FoodGroup = ChooseFoodGroup() // Choose food group from the list
+            };
             Ingredients.Add(ingredient);
             originalQuantities.Add($"{ingredient.Quantity} {ingredient.Unit}"); // Store the original quantity
             originalCalories.Add(ingredient.Calories); // Store the original calorie value
@@ -47,6 +58,34 @@ using System;
         }
     }
 
+    // Method to choose food group from a list
+    private string ChooseFoodGroup()
+    {
+        Console.WriteLine("Choose a food group:");
+        for (int i = 0; i < commonFoodGroups.Length; i++)
+        {
+            Console.WriteLine($"{i + 1}. {commonFoodGroups[i]}");
+        }
+        Console.WriteLine($"{commonFoodGroups.Length + 1}. Enter your own food group");
+
+        int choice = ReadInt("Enter the number corresponding to the food group: ");
+        if (choice >= 1 && choice <= commonFoodGroups.Length)
+        {
+            return commonFoodGroups[choice - 1];
+        }
+        else if (choice == commonFoodGroups.Length + 1)
+        {
+            return ReadString("Enter your own food group: ");
+        }
+        else
+        {
+            Console.WriteLine("Invalid choice. Defaulting to 'Other'.");
+            return "Other";
+        }
+    }
+
+
+    // Method to display recipe details
     public void DisplayRecipe()
     {
         Console.WriteLine($"\nRecipe: {Name}");
@@ -60,18 +99,32 @@ using System;
         {
             Console.WriteLine(step);
         }
+
+        // Explanation specific to certain ranges of calories
+        double totalCalories = CalculateTotalCalories();
+        if (totalCalories <= 100)
+        {
+            Console.WriteLine("\nThis recipe is low in calories, making it a healthy choice.");
+        }
+        else if (totalCalories <= 300)
+        {
+            Console.WriteLine("\nThis recipe is moderate in calories, suitable for balanced meals.");
+        }
+        else
+        {
+            Console.WriteLine("\nThis recipe is high in calories. It's best enjoyed in moderation.");
+        }
     }
 
+
+    // Method to calculate total calories of the recipe
     public double CalculateTotalCalories()
     {
-        double totalCalories = 0;
-        foreach (Ingredient ingredient in Ingredients)
-        {
-            totalCalories += ingredient.Calories;
-        }
+        double totalCalories = Ingredients.Sum(ingredient => ingredient.Calories);
         return totalCalories;
     }
 
+    // Method to scale the recipe
     public bool ScaleRecipe()
     {
         Console.Write("\nWould you like to scale the recipe? (yes/no) ");
@@ -102,13 +155,13 @@ using System;
         }
     }
 
+    // Method to reset ingredient quantities to their original values
     public void ResetQuantities()
     {
         for (int i = 0; i < Ingredients.Count; i++)
         {
             string[] parts = originalQuantities[i].Split(' ');
-            double quantity;
-            if (double.TryParse(parts[0], out quantity))
+            if (double.TryParse(parts[0], out double quantity))
             {
                 Ingredients[i].Quantity = quantity;
             }
@@ -117,8 +170,10 @@ using System;
                 Console.WriteLine($"Failed to parse quantity for ingredient: {originalQuantities[i]}");
             }
         }
+
     }
 
+    // Method to reset ingredient calories to their original values
     public void ResetCalories()
     {
         for (int i = 0; i < Ingredients.Count; i++)
@@ -127,6 +182,7 @@ using System;
         }
     }
 
+    // Method to clear the recipe
     public void ClearRecipe()
     {
         Ingredients.Clear();
@@ -135,6 +191,44 @@ using System;
         originalCalories.Clear(); // Clear the list of original calorie values
     }
 
+    // Method to edit recipe details
+    public void EditRecipe()
+    {
+        Console.WriteLine("\nEditing Recipe Details:");
+
+        Console.Write("Enter new recipe name: ");
+        Name = Console.ReadLine();
+
+        int numIngredients = ReadInt("Enter the number of ingredients: ");
+        Ingredients.Clear(); // Clear existing ingredients before adding new ones
+        for (int i = 0; i < numIngredients; i++)
+        {
+            Console.WriteLine($"\nIngredient {i + 1}:");
+            Ingredient ingredient = new Ingredient
+            {
+                Name = ReadString("Enter ingredient name (e.g., chicken breast, tomatoes, flour): "),
+                Quantity = ReadDouble("Enter quantity (e.g., 1, 0.5, 2.5): "),
+                Unit = ReadString("Enter unit of measurement (e.g., cups, grams, tablespoons):  "),
+                Calories = ReadDouble("Enter number of calories for the ingredient (calories per serving): "),
+                FoodGroup = ReadString("Enter food group for the ingredient (e.g., protein, vegetable, grain):  ")
+            };
+            Ingredients.Add(ingredient);
+            originalQuantities.Add($"{ingredient.Quantity} {ingredient.Unit}"); // Store the original quantity
+            originalCalories.Add(ingredient.Calories); // Store the original calorie value
+        }
+
+        int numSteps = ReadInt("\nEnter the number of steps: ");
+        Steps.Clear(); // Clear existing steps before adding new ones
+        for (int i = 0; i < numSteps; i++)
+        {
+            Console.Write($"Enter step {i + 1}: ");
+            Steps.Add(Console.ReadLine());
+        }
+
+        Console.WriteLine("\nRecipe updated successfully!");
+    }
+
+    // Helper method to read an integer value from the console
     private int ReadInt(string prompt)
     {
         int value;
@@ -146,6 +240,7 @@ using System;
         return value;
     }
 
+    // Helper method to read a double value from the console, with optional validation
     private double ReadDouble(string prompt, double[] validValues = null)
     {
         double value;
@@ -157,9 +252,21 @@ using System;
         return value;
     }
 
+    // Helper method to read a string value from the console
     private string ReadString(string prompt)
     {
         Console.Write(prompt);
         return Console.ReadLine();
     }
+
+    // Method to notify if the total calories exceed 300
+    public void NotifyIfCaloriesExceedLimit()
+    {
+        double totalCalories = CalculateTotalCalories();
+        if (totalCalories > 300)
+        {
+            CalorieWarning?.Invoke($"Warning: Total calories of {Name} exceed 300!");
+        }
+    }
 }
+
