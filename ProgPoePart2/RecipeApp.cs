@@ -95,6 +95,12 @@ namespace ProgPoePart2
                 return;
             }
 
+            Console.WriteLine("\nAvailable Recipes:");
+            for (int i = 0; i < recipes.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {recipes[i].Name}");
+            }
+
             Recipe recipe = SelectRecipe();
             if (recipe != null)
             {
@@ -143,6 +149,12 @@ namespace ProgPoePart2
                 return;
             }
 
+            Console.WriteLine("\nAvailable Recipes:");
+            for (int i = 0; i < recipes.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {recipes[i].Name}");
+            }
+
             Recipe recipe = SelectRecipe();
             if (recipe != null)
             {
@@ -155,7 +167,6 @@ namespace ProgPoePart2
             }
             Pause();
         }
-
         private Recipe SelectRecipe()
         {
             Console.Write("\nEnter the number of the recipe you want to select: ");

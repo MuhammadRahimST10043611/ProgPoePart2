@@ -124,6 +124,7 @@ class Recipe
                 Console.WriteLine($"Failed to parse quantity for ingredient: {originalQuantities[i]}");
             }
         }
+
     }
 
     // Method to reset ingredient calories to their original values
