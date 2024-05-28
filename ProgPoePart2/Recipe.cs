@@ -16,6 +16,9 @@ class Recipe
     public delegate void CalorieWarningHandler(string message);
     public event CalorieWarningHandler CalorieWarning;
 
+    // Common food groups
+    private string[] commonFoodGroups = { "Protein", "Vegetable", "Grain", "Fruit", "Dairy", "Fat/Oil" };
+
     public Recipe()
     {
         Ingredients = new List<Ingredient>();
@@ -40,7 +43,7 @@ class Recipe
                 Quantity = ReadDouble("Enter quantity (e.g., 1, 0.5, 2.5): "),
                 Unit = ReadString("Enter unit of measurement (e.g., cups, grams, tablespoons):  "),
                 Calories = ReadDouble("Enter number of calories for the ingredient (calories per serving): "),
-                FoodGroup = ReadString("Enter food group for the ingredient (e.g., protein, vegetable, grain):  ")
+                FoodGroup = ChooseFoodGroup() // Choose food group from the list
             };
             Ingredients.Add(ingredient);
             originalQuantities.Add($"{ingredient.Quantity} {ingredient.Unit}"); // Store the original quantity
@@ -54,6 +57,28 @@ class Recipe
             Steps.Add(Console.ReadLine());
         }
     }
+
+    // Method to choose food group from a list
+    private string ChooseFoodGroup()
+    {
+        Console.WriteLine("Choose a food group:");
+        for (int i = 0; i < commonFoodGroups.Length; i++)
+        {
+            Console.WriteLine($"{i + 1}. {commonFoodGroups[i]}");
+        }
+
+        int choice = ReadInt("Enter the number corresponding to the food group: ");
+        if (choice >= 1 && choice <= commonFoodGroups.Length)
+        {
+            return commonFoodGroups[choice - 1];
+        }
+        else
+        {
+            Console.WriteLine("Invalid choice. Defaulting to 'Other'.");
+            return "Other";
+        }
+    }
+
 
     // Method to display recipe details
     public void DisplayRecipe()
