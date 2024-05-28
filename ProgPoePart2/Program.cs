@@ -9,7 +9,7 @@ namespace ProgPoePart2
             DisplayWelcomeScreen(); // Display welcome screen
             Console.ReadLine(); // Wait for user to press Enter
 
-            Console.ForegroundColor = ConsoleColor.Green; // Set text color to green
+            Console.ForegroundColor = ConsoleColor.Yellow; // Set text color to green
             RecipeApp recipeApp = new RecipeApp();
             recipeApp.Run();
 
@@ -23,7 +23,7 @@ namespace ProgPoePart2
         static void DisplayWelcomeScreen()
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Green; // Set text color to green
+            Console.ForegroundColor = ConsoleColor.Cyan; // Set text color to green
             Console.WriteLine(@" 
                 W   W  EEEE  L     CCCC   OOO  M   M  EEEE
                 W   W  E     L     C     O   O MM MM  E    
@@ -38,7 +38,7 @@ namespace ProgPoePart2
         static void DisplayExitScreen()
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Green; // Set text color to green
+            Console.ForegroundColor = ConsoleColor.Cyan; // Set text color to green
             Console.WriteLine(@" 
                 BBBB   YY   YY  EEEE
                 B   B   YY YY   E   

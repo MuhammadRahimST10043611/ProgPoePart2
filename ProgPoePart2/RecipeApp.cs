@@ -4,15 +4,19 @@ using System.Linq;
 
 namespace ProgPoePart2
 {
+    // Class for managing recipes within the application
     class RecipeApp
     {
+        // List to store recipes
         private List<Recipe> recipes;
 
+        // Constructor to initialize the list of recipes
         public RecipeApp()
         {
             recipes = new List<Recipe>();
         }
 
+        // Method to start the RecipeApp and present the main menu
         public void Run()
         {
             bool exit = false;
@@ -29,6 +33,7 @@ namespace ProgPoePart2
                 Console.Write("Enter your choice (1-6): ");
                 string choice = Console.ReadLine();
 
+                // Switch statement to handle user choices
                 switch (choice)
                 {
                     case "1":
@@ -57,6 +62,7 @@ namespace ProgPoePart2
             }
         }
 
+        // Method to add a new recipe
         private void AddRecipe()
         {
             Recipe recipe = new Recipe();
@@ -68,6 +74,7 @@ namespace ProgPoePart2
             Pause();
         }
 
+        // Method to display all recipes
         private void ViewRecipes()
         {
             if (recipes.Count == 0)
@@ -93,6 +100,7 @@ namespace ProgPoePart2
             }
         }
 
+        // Method to scale a recipe
         private void ScaleRecipe()
         {
             if (recipes.Count == 0)
@@ -150,6 +158,7 @@ namespace ProgPoePart2
             Pause();
         }
 
+        // Method to remove a recipe
         private void RemoveRecipe()
         {
             if (recipes.Count == 0)
@@ -181,6 +190,7 @@ namespace ProgPoePart2
             Pause();
         }
 
+        // Method to edit a recipe
         private void EditRecipeMenu()
         {
             if (recipes.Count == 0)
@@ -211,6 +221,7 @@ namespace ProgPoePart2
             Pause();
         }
 
+        // Method to select a recipe from a list
         private Recipe SelectRecipe(List<Recipe> sortedRecipes)
         {
             Console.Write("\nEnter the number of the recipe you want to select: ");
@@ -225,6 +236,7 @@ namespace ProgPoePart2
             }
         }
 
+        // Method to display recipe details
         private void DisplayRecipeDetails(Recipe recipe)
         {
             Console.WriteLine("\nRecipe Details:");
@@ -236,11 +248,13 @@ namespace ProgPoePart2
             Pause();
         }
 
+        // Method to display calorie warning
         private void DisplayCalorieWarning(string message)
         {
             Console.WriteLine(message);
         }
 
+        // Method to pause and prompt for key press
         private void Pause()
         {
             Console.WriteLine("\nPress any key to continue...");
